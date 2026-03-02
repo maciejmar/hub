@@ -41,3 +41,5 @@ node_modules/
 hub-frontend/node_modules/
 hub-frontend/dist/
 hub-frontend/.angular/
+app-a-days/
+app-b-pressure/
