@@ -16,6 +16,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
   is_active: true,
 });
 
+
 @Component({
   selector: 'app-admin',
   standalone: true,
@@ -23,9 +24,10 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
   template: `
     <section class="admin">
       <header class="admin__header">
-        <div>
+        <img class="admin__logo" src="bgk-logo.svg" alt="BGK" />
+        <div class="admin__header-info">
           <h1>Panel Administracyjny</h1>
-          <p>Katalog aplikacji widocznych w Hubie.</p>
+          <p>Katalog aplikacji widocznych w Portalu.</p>
         </div>
         <button class="btn btn--back" type="button" (click)="goBack()">← Powrot do Huba</button>
       </header>
@@ -121,9 +123,12 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
     </section>
   `,
   styles: `
+    :host { display: block; min-height: 100vh; background: #fff; }
     .admin { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; font-family: Arial, sans-serif; }
+    .admin__logo { height: 72px; width: auto; flex-shrink: 0; }
+    .admin__header-info { flex: 1; }
     .admin__header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
-    .admin__header h1 { margin: 0; font-size: clamp(22px, 3vw, 32px); }
+    .admin__header h1 { margin: 0; font-size: clamp(22px, 3vw, 32px); color: #6b7280; }
     .admin__header p { margin: 6px 0 0; color: #6b7280; }
     .toolbar { margin-bottom: 18px; }
     .state { color: #6b7280; }
@@ -131,8 +136,8 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
 
     .btn { padding: 9px 14px; border-radius: 8px; border: 1px solid #d1d5db; background: #f9fafb; cursor: pointer; font-weight: 600; font-size: 13px; }
     .btn:hover { background: #f3f4f6; }
-    .btn--primary { background: #1d4ed8; color: #fff; border-color: transparent; }
-    .btn--primary:hover { background: #1e40af; }
+    .btn--primary { background: linear-gradient(rgb(211, 23, 46), rgb(200, 13, 38)); color: #fff; border: 1px solid rgb(211, 23, 46); border-radius: 4px; }
+    .btn--primary:hover { filter: brightness(1.1); }
     .btn--back { background: transparent; border-color: #d1d5db; }
     .btn--danger { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
     .btn--danger:hover { background: #fecaca; }

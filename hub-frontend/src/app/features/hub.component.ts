@@ -13,20 +13,21 @@ import { HubService } from './hub.service';
   template: `
     <section class="hub">
       <header class="hub__header">
-        <div>
-          <h1>Hub aplikacji</h1>
-          <p *ngIf="data">Zalogowany: {{ data.user.name }} ({{ data.user.email }})</p>
+        <img class="hub__logo" src="bgk-logo-white.svg" alt="BGK" />
+        <div class="hub__header-info">
+          <h1>Portal aplikacji AI</h1>
         </div>
-        <button class="hub__logout" type="button" (click)="logout()">Wyloguj</button>
+        <div class="hub__header-right">
+          <p class="hub__user" *ngIf="data">Zalogowany: {{ data.user.name }} ({{ data.user.email }})</p>
+          <div class="hub__roles" *ngIf="data && data.roles.length > 0">
+            <span class="hub__role" *ngFor="let role of data.roles">{{ role }}</span>
+          </div>
+          <button class="hub__logout" type="button" (click)="logout()">Wyloguj</button>
+        </div>
       </header>
 
       <p class="hub__state" *ngIf="loading">Ladowanie aplikacji...</p>
       <p class="hub__state hub__state--error" *ngIf="error">{{ error }}</p>
-
-      <div class="hub__roles" *ngIf="data && data.roles.length > 0">
-        <strong>Role:</strong>
-        <span class="hub__role" *ngFor="let role of data.roles">{{ role }}</span>
-      </div>
 
       <div class="hub__grid" *ngIf="data">
         <article class="hub__card" *ngFor="let app of data.apps">
@@ -43,34 +44,54 @@ import { HubService } from './hub.service';
       margin: 0 auto;
       padding: 24px 16px 36px;
     }
+    .hub__logo {
+      height: 80px;
+      width: auto;
+      flex-shrink: 0;
+    }
+    .hub__header-info {
+      flex: 1;
+    }
+    .hub__header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .hub__user {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
     .hub__header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      margin-bottom: 16px;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 96px;
     }
     .hub__header h1 {
       margin: 0;
       font-size: clamp(26px, 4vw, 38px);
     }
-    .hub__header p {
-      margin: 8px 0 0;
-      color: var(--text-muted);
-    }
     .hub__logout {
-      border: 1px solid rgba(244, 63, 94, 0.45);
-      border-radius: 12px;
-      padding: 10px 14px;
+      display: inline-block;
+      height: 35px;
+      padding: 6px 10px;
       cursor: pointer;
-      font-weight: 600;
-      color: #ffe7ee;
-      background: linear-gradient(130deg, rgba(244, 63, 94, 0.22), rgba(244, 63, 94, 0.1));
-      transition: transform 120ms ease, filter 120ms ease;
+      font-family: tide_sans_cond400_lil_dude, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 21px;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(rgb(211, 23, 46), rgb(200, 13, 38));
+      border: 1px solid rgb(211, 23, 46);
+      border-radius: 4px;
+      transition: all 0.15s;
     }
     .hub__logout:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.06);
+      filter: brightness(1.1);
     }
     .hub__state {
       margin: 10px 0 4px;
@@ -82,10 +103,7 @@ import { HubService } from './hub.service';
     .hub__roles {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      margin: 14px 0 18px;
-      color: var(--text-muted);
+      gap: 4px;
     }
     .hub__role {
       border: 1px solid rgba(56, 189, 248, 0.3);
@@ -130,16 +148,23 @@ import { HubService } from './hub.service';
     }
     .hub__open {
       display: inline-block;
+      height: 35px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-family: tide_sans_cond400_lil_dude, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 21px;
+      color: #fff;
+      text-align: center;
       text-decoration: none;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-weight: 700;
-      color: #08121f;
-      background: linear-gradient(120deg, var(--accent-a), var(--accent-b));
-      transition: filter 120ms ease;
+      background: linear-gradient(rgb(211, 23, 46), rgb(200, 13, 38));
+      border: 1px solid rgb(211, 23, 46);
+      border-radius: 4px;
+      transition: all 0.15s;
     }
     .hub__open:hover {
-      filter: brightness(1.05);
+      filter: brightness(1.1);
     }
     @media (max-width: 640px) {
       .hub__header {

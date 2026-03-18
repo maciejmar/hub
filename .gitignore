@@ -30,3 +30,6 @@ Thumbs.db
 
 # Docker
 *.log
+app-b-pressure/
+app-a-days/
+conversation_export.txt

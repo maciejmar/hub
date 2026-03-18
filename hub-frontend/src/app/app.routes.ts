@@ -18,6 +18,30 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./features/admin/admin.component').then((m) => m.AdminComponent),
   },
+  {
+    path: 'eksplorator',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/app-page/app-page.component').then((m) => m.AppPageComponent),
+    data: { title: 'Eksplorator', description: 'Testowanie aplikacji w GUI' },
+  },
+  {
+    path: 'proster',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/app-page/app-page.component').then((m) => m.AppPageComponent),
+    data: { title: 'Proster', description: 'Prosty język polski' },
+  },
+  {
+    path: 'asystent-programisty',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/app-page/app-page.component').then((m) => m.AppPageComponent),
+    data: { title: 'Asystent programisty', description: 'Współtworzenie kodu z AI' },
+  },
+  {
+    path: 'ai-sandbox',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/app-page/app-page.component').then((m) => m.AppPageComponent),
+    data: { title: 'Miejsce na Wasz AI Sandbox', description: 'Wsparcie AI' },
+  },
   { path: '', pathMatch: 'full', redirectTo: 'apps' },
   { path: '**', redirectTo: 'apps' },
 ];
