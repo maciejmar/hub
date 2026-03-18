@@ -16,7 +16,6 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
   is_active: true,
 });
 
-
 @Component({
   selector: 'app-admin',
   standalone: true,
