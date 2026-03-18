@@ -50,8 +50,8 @@ services:
       - ./backend/.env
     environment:
       DATABASE_URL: postgresql+psycopg2://postgres:postgres@hub-postgres:5432/hub_db
-      OIDC_ISSUER_URL: https://login.microsoftonline.com/3cf0f665-a664-4ad7-a75f-520538df5523/v2.0
-      OIDC_DISCOVERY_URL: https://login.microsoftonline.com/3cf0f665-a664-4ad7-a75f-520538df5523/v2.0/.well-known/openid-configuration
+      OIDC_ISSUER_URL: https://login.microsoftonline.com/29bb5b9c-200a-4906-89ef-c651c86ab301/v2.0
+      OIDC_DISCOVERY_URL: https://login.microsoftonline.com/29bb5b9c-200a-4906-89ef-c651c86ab301/v2.0/.well-known/openid-configuration
       OIDC_AUDIENCE: "e517ed53-e3c5-42b4-b8c9-e35974e369ee"
       BACKEND_CORS_ORIGINS: http://localhost:4200,https://ai-apps-portal-test.northeurope.cloudapp.azure.com
     ports:
