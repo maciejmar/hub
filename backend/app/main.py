@@ -49,20 +49,52 @@ def _seed_catalog() -> None:
             return
         initial_apps = [
             CatalogApp(
-                id="app-a",
-                name="App A - Dni do daty",
-                description="Kalkulator liczby dni do wskazanej daty.",
+                id="gacek",
+                name="Gacek",
+                description="Aplikacja dla Call Center",
                 url="http://localhost:4201",
                 required_roles="",
                 sort_order=0,
             ),
             CatalogApp(
-                id="app-b",
-                name="App B - Cisnienie Warszawa",
-                description="Aktualne cisnienie atmosferyczne i temperatura.",
+                id="analityk-ai",
+                name="Analityk AI",
+                description="Analiza i weryfikacja dokumentacji",
                 url="http://localhost:4202",
                 required_roles="",
                 sort_order=1,
+            ),
+            CatalogApp(
+                id="eksplorator",
+                name="Eksplorator",
+                description="Testowanie aplikacji w GUI",
+                url="http://localhost:4200/eksplorator",
+                required_roles="",
+                sort_order=2,
+            ),
+            CatalogApp(
+                id="proster",
+                name="Proster",
+                description="Prosty język polski",
+                url="http://localhost:4200/proster",
+                required_roles="",
+                sort_order=3,
+            ),
+            CatalogApp(
+                id="asystent-programisty",
+                name="Asystent programisty",
+                description="Współtworzenie kodu z AI",
+                url="http://localhost:4200/asystent-programisty",
+                required_roles="",
+                sort_order=4,
+            ),
+            CatalogApp(
+                id="ai-sandbox",
+                name="Miejsce na Wasz AI Sandbox",
+                description="Wsparcie AI",
+                url="http://localhost:4200/ai-sandbox",
+                required_roles="",
+                sort_order=5,
             ),
             CatalogApp(
                 id="admin-panel",
@@ -70,7 +102,7 @@ def _seed_catalog() -> None:
                 description="Zarzadzanie katalogiem aplikacji i uprawnieniami.",
                 url="http://localhost:4200/admin",
                 required_roles="hub-admin",
-                sort_order=2,
+                sort_order=6,
             ),
         ]
         db.add_all(initial_apps)
