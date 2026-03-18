@@ -37,7 +37,7 @@ export class OidcAuthService {
   }
 
   getAccessToken(): string {
-    return this.oauthService.getIdToken() || this.oauthService.getAccessToken();
+    return this.oauthService.getAccessToken();
   }
 
   async loadProfile(): Promise<object> {
