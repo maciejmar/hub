@@ -9,7 +9,7 @@ import { OidcAuthService } from '../../core/auth/oidc-auth.service';
   imports: [CommonModule],
   template: `
     <header class="login__header">
-      <img src="assets/bgk-logo.png" alt="BGK" class="login__logo" />
+      <img src="bgk-logo-white.svg" alt="BGK" class="login__logo" />
     </header>
     <section class="login">
       <div class="login__card">
