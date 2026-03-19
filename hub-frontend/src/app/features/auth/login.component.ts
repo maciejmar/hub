@@ -8,6 +8,9 @@ import { OidcAuthService } from '../../core/auth/oidc-auth.service';
   standalone: true,
   imports: [CommonModule],
   template: `
+    <header class="login__header">
+      <img src="assets/bgk-logo.png" alt="BGK" class="login__logo" />
+    </header>
     <section class="login">
       <div class="login__card">
         <p class="login__kicker">Single Sign-On</p>
@@ -62,22 +65,31 @@ import { OidcAuthService } from '../../core/auth/oidc-auth.service';
       line-height: 1.5;
       max-width: 46ch;
     }
+    .login__header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 16px 24px;
+    }
+    .login__logo {
+      height: 48px;
+    }
     .login__btn {
       border: 0;
       border-radius: 12px;
       padding: 14px 20px;
       font-size: 16px;
       font-weight: 700;
-      color: #08121f;
+      color: #fff;
       cursor: pointer;
-      background: linear-gradient(125deg, var(--accent-a), var(--accent-b) 55%, var(--accent-c));
-      box-shadow: 0 12px 26px rgba(56, 189, 248, 0.35);
+      background: #dc2626;
+      box-shadow: 0 12px 26px rgba(220, 38, 38, 0.35);
       transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
     }
     .login__btn:hover {
       transform: translateY(-1px);
-      filter: brightness(1.04);
-      box-shadow: 0 16px 32px rgba(56, 189, 248, 0.42);
+      filter: brightness(1.08);
+      box-shadow: 0 16px 32px rgba(220, 38, 38, 0.42);
     }
     .login__btn:active {
       transform: translateY(0);
