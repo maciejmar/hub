@@ -16,7 +16,7 @@ import { OidcAuthService } from '../../core/auth/oidc-auth.service';
         <p class="login__kicker">Single Sign-On</p>
         <h1>Hub Aplikacji</h1>
         <p class="login__lead">
-          Jedno logowanie, wiele narzedzi. Uwierzytelnianie realizuje Azure Entra.
+          Jedno logowanie, wiele narzedzi dostarczonych przez ZRAI
         </p>
         <button class="login__btn" type="button" (click)="login()">
           Zaloguj przez SSO
