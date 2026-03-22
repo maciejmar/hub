@@ -18,7 +18,7 @@ import { HubService } from './hub.service';
           <h1>Portal aplikacji AI</h1>
         </div>
         <div class="hub__header-right" *ngIf="data">
-          <div class="hub__user-bar" (click)="toggleMenu()">
+          <div class="hub__user-bar" (click)="toggleMenu(); $event.stopPropagation()">
             <div class="hub__avatar" [style.background-image]="avatarBg">
               <span *ngIf="!customAvatar">{{ initials }}</span>
             </div>
