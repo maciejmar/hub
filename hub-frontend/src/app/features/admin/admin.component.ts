@@ -58,7 +58,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
         </label>
         <label>
           URL
-          <input type="url" [(ngModel)]="form.url" name="url" required placeholder="http://localhost:4203" />
+          <input type="text" [(ngModel)]="form.url" name="url" required placeholder="http://localhost:4203" />
         </label>
         <label>
           Wymagane role (oddzielone przecinkiem)
