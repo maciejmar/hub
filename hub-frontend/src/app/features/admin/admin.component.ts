@@ -23,7 +23,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
   template: `
     <section class="admin">
       <header class="admin__header">
-        <img class="admin__logo" src="bgk-logo.svg" alt="BGK" />
+        <img class="admin__logo" src="bgk-logo-white.svg" alt="BGK" />
         <div class="admin__header-info">
           <h1>Panel Administracyjny</h1>
           <p>Katalog aplikacji widocznych w Portalu.</p>
@@ -122,45 +122,46 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
     </section>
   `,
   styles: `
-    :host { display: block; min-height: 100vh; background: #fff; }
-    .admin { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; font-family: Arial, sans-serif; }
+    :host { display: block; min-height: 100vh; }
+    .admin { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; font-family: tide_sans_cond400_lil_dude, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     .admin__logo { height: 72px; width: auto; flex-shrink: 0; }
     .admin__header-info { flex: 1; }
     .admin__header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
-    .admin__header h1 { margin: 0; font-size: clamp(22px, 3vw, 32px); color: #6b7280; }
-    .admin__header p { margin: 6px 0 0; color: #6b7280; }
+    .admin__header h1 { margin: 0; font-size: clamp(22px, 3vw, 32px); color: var(--text-muted); }
+    .admin__header p { margin: 6px 0 0; color: var(--text-muted); }
     .toolbar { margin-bottom: 18px; }
-    .state { color: #6b7280; }
-    .state--error { color: #b91c1c; }
+    .state { color: var(--text-muted); }
+    .state--error { color: var(--danger-a); }
 
-    .btn { padding: 9px 14px; border-radius: 8px; border: 1px solid #d1d5db; background: #f9fafb; cursor: pointer; font-weight: 600; font-size: 13px; }
-    .btn:hover { background: #f3f4f6; }
+    .btn { padding: 9px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--text-main); cursor: pointer; font-weight: 600; font-size: 13px; font-family: inherit; transition: background 0.15s; }
+    .btn:hover { background: var(--surface-strong); }
     .btn--primary { background: linear-gradient(rgb(211, 23, 46), rgb(200, 13, 38)); color: #fff; border: 1px solid rgb(211, 23, 46); border-radius: 4px; }
     .btn--primary:hover { filter: brightness(1.1); }
-    .btn--back { background: transparent; border-color: #d1d5db; }
-    .btn--danger { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
-    .btn--danger:hover { background: #fecaca; }
+    .btn--back { background: transparent; border-color: var(--line); color: var(--text-muted); }
+    .btn--danger { background: rgba(244, 63, 94, 0.15); color: var(--danger-a); border-color: rgba(244, 63, 94, 0.3); }
+    .btn--danger:hover { background: rgba(244, 63, 94, 0.25); }
     .btn--sm { padding: 5px 10px; font-size: 12px; }
 
-    .form { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 24px; display: grid; gap: 12px; max-width: 560px; }
-    .form h2 { margin: 0 0 4px; font-size: 18px; }
-    label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: #374151; }
-    label input[type=text], label input[type=url], label input[type=number] { padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }
+    .form { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-bottom: 24px; display: grid; gap: 12px; max-width: 560px; }
+    .form h2 { margin: 0 0 4px; font-size: 18px; color: var(--text-main); }
+    label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
+    label input[type=text], label input[type=url], label input[type=number] { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; background: var(--surface-strong); color: var(--text-main); font-family: inherit; }
+    label input[type=text]:focus, label input[type=url]:focus, label input[type=number]:focus { outline: 1px solid var(--accent-b); }
     .label--checkbox { flex-direction: row; align-items: center; gap: 8px; display: flex; font-size: 14px; }
     .form__actions { display: flex; gap: 8px; margin-top: 4px; }
 
     .table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .table th { text-align: left; padding: 8px 10px; background: #f3f4f6; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
-    .table td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
-    .row--inactive td { opacity: 0.5; }
-    .table a { color: #1d4ed8; }
+    .table th { text-align: left; padding: 8px 10px; background: var(--surface); color: var(--text-muted); border-bottom: 2px solid var(--line); white-space: nowrap; }
+    .table td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; color: var(--text-main); }
+    .row--inactive td { opacity: 0.45; }
+    .table a { color: var(--accent-b); }
     .actions { display: flex; gap: 6px; white-space: nowrap; }
-    code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+    code { background: var(--surface); color: var(--accent-a); padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid var(--line); }
 
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #dbeafe; color: #1e40af; margin: 2px 2px 2px 0; }
-    .badge--empty { background: #d1fae5; color: #065f46; }
-    .status { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #fee2e2; color: #b91c1c; }
-    .status--on { background: #d1fae5; color: #065f46; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(56, 189, 248, 0.15); color: var(--accent-b); border: 1px solid rgba(56, 189, 248, 0.25); margin: 2px 2px 2px 0; }
+    .badge--empty { background: rgba(45, 212, 191, 0.15); color: var(--accent-a); border: 1px solid rgba(45, 212, 191, 0.25); }
+    .status { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(244, 63, 94, 0.15); color: var(--danger-a); border: 1px solid rgba(244, 63, 94, 0.25); }
+    .status--on { background: rgba(45, 212, 191, 0.15); color: var(--accent-a); border: 1px solid rgba(45, 212, 191, 0.25); }
   `,
 })
 export class AdminComponent implements OnInit {
