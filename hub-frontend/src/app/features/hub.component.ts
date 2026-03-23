@@ -19,7 +19,7 @@ import { HubService } from './hub.service';
         </div>
         <div class="hub__header-right" *ngIf="data">
           <div class="hub__user-bar" (click)="toggleMenu(); $event.stopPropagation()">
-            <div class="hub__avatar" [style.background-image]="avatarBg">
+            <div class="hub__avatar" [style.background]="avatarBg">
               <span *ngIf="!customAvatar">{{ initials }}</span>
             </div>
             <span class="hub__user-name">{{ data.user.name }}</span>
@@ -30,7 +30,7 @@ import { HubService } from './hub.service';
 
           <div class="hub__dropdown" *ngIf="menuOpen" (click)="$event.stopPropagation()">
             <div class="hub__dropdown-header">
-              <div class="hub__avatar hub__avatar--lg" [style.background-image]="avatarBg">
+              <div class="hub__avatar hub__avatar--lg" [style.background]="avatarBg">
                 <span *ngIf="!customAvatar">{{ initials }}</span>
               </div>
               <div>
@@ -75,7 +75,7 @@ import { HubService } from './hub.service';
         </div>
 
         <div class="hub__modal-section">
-          <div class="hub__avatar hub__avatar--xl" [style.background-image]="avatarBg">
+          <div class="hub__avatar hub__avatar--xl" [style.background]="avatarBg">
             <span *ngIf="!customAvatar">{{ initials }}</span>
           </div>
           <label class="hub__btn-secondary">
@@ -171,7 +171,6 @@ import { HubService } from './hub.service';
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgb(211,23,46), rgb(150,10,30));
       background-size: cover;
       background-position: center;
       display: flex;
@@ -380,7 +379,8 @@ import { HubService } from './hub.service';
     .hub__modal-label {
       margin: 0 0 8px;
       font-size: 13px;
-      color: var(--text-muted);
+      color: var(--text-main);
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       align-self: flex-start;
@@ -388,11 +388,12 @@ import { HubService } from './hub.service';
     .hub__btn-secondary {
       padding: 8px 18px;
       border-radius: 6px;
-      border: 1px solid var(--line);
-      background: var(--surface);
+      border: 1px solid var(--dropdown-border);
+      background: var(--surface-strong);
       color: var(--text-main);
       font-family: inherit;
       font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
     }
@@ -465,7 +466,9 @@ export class HubComponent implements OnInit {
   }
 
   get avatarBg(): string {
-    return this.customAvatar ? `url(${this.customAvatar})` : 'none';
+    return this.customAvatar
+      ? `url(${this.customAvatar}) center/cover no-repeat`
+      : 'linear-gradient(135deg, rgb(211,23,46), rgb(150,10,30))';
   }
 
   get isAdmin(): boolean {
