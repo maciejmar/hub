@@ -50,7 +50,8 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
         </label>
         <label>
           Nazwa
-          <input type="text" [(ngModel)]="form.name" name="name" required placeholder="Moja Aplikacja" />
+          <input type="text" [(ngModel)]="form.name" name="name" required placeholder="Moja Aplikacja"
+                 (ngModelChange)="onNameChange($event)" />
         </label>
         <label>
           Opis
@@ -233,6 +234,12 @@ export class AdminComponent implements OnInit {
       next: () => this.load(),
       error: (err) => { this.error = err?.error?.detail ?? 'Blad usuwania.'; },
     });
+  }
+
+  onNameChange(name: string): void {
+    if (!this.editingId) {
+      this.form.id = name.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    }
   }
 
   splitRoles(roles: string): string[] {
