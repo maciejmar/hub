@@ -42,6 +42,10 @@ import { HubService } from './hub.service';
               </div>
             </div>
             <div class="hub__dropdown-divider"></div>
+            <button class="hub__dropdown-item" *ngIf="isAdmin" (click)="openAdmin()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Panel administracyjny
+            </button>
             <button class="hub__dropdown-item" (click)="openSettings()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
               Ustawienia konta
@@ -58,7 +62,7 @@ import { HubService } from './hub.service';
       <p class="hub__state hub__state--error" *ngIf="error">{{ error }}</p>
 
       <div class="hub__grid" *ngIf="data">
-        <article class="hub__card" *ngFor="let app of data.apps">
+        <article class="hub__card" *ngFor="let app of visibleApps">
           <h2>{{ app.name }}</h2>
           <p>{{ app.description }}</p>
           <button class="hub__open" type="button" (click)="open(app.url)">Zacznij pracę z aplikacją</button>
@@ -226,13 +230,13 @@ import { HubService } from './hub.service';
       margin-top: 6px;
     }
     .hub__role-badge {
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      border: 1px solid var(--dropdown-border);
       border-radius: 999px;
       padding: 2px 8px;
       font-size: 11px;
       font-weight: 700;
-      color: #d8ebff;
-      background: rgba(56, 189, 248, 0.16);
+      color: var(--text-muted);
+      background: var(--dropdown-hover);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -473,6 +477,15 @@ export class HubComponent implements OnInit {
 
   get isAdmin(): boolean {
     return this.data?.roles.includes('hub-admin') ?? false;
+  }
+
+  get visibleApps() {
+    return this.data?.apps.filter(a => a.id !== 'admin-panel') ?? [];
+  }
+
+  openAdmin(): void {
+    this.menuOpen = false;
+    this.router.navigateByUrl('/admin');
   }
 
   @HostListener('document:click')
