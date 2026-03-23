@@ -13,7 +13,7 @@ import { HubService } from './hub.service';
   template: `
     <section class="hub">
       <header class="hub__header">
-        <img class="hub__logo" [src]="lightTheme ? 'bgk-logo-black.svg' : 'bgk-logo-white.svg'" alt="BGK" />
+        <img class="hub__logo" [src]="lightTheme ? 'bgk-logo.svg' : 'bgk-logo-white.svg'" alt="BGK" />
         <div class="hub__header-info">
           <h1>Portal aplikacji AI</h1>
         </div>
