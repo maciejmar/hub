@@ -40,6 +40,10 @@ export class OidcAuthService {
     return this.oauthService.getIdToken() || this.oauthService.getAccessToken();
   }
 
+  getGraphToken(): string {
+    return this.oauthService.getAccessToken();
+  }
+
   async loadProfile(): Promise<object> {
     return this.oauthService.loadUserProfile();
   }

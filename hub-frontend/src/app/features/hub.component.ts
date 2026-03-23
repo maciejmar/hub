@@ -20,7 +20,7 @@ import { HubService } from './hub.service';
         <div class="hub__header-right" *ngIf="data">
           <div class="hub__user-bar" (click)="toggleMenu(); $event.stopPropagation()">
             <div class="hub__avatar" [style.background]="avatarBg">
-              <span *ngIf="!customAvatar">{{ initials }}</span>
+              <span *ngIf="!hasPhoto">{{ initials }}</span>
             </div>
             <span class="hub__user-name">{{ data.user.name }}</span>
             <svg class="hub__chevron" [class.hub__chevron--open]="menuOpen" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -31,7 +31,7 @@ import { HubService } from './hub.service';
           <div class="hub__dropdown" *ngIf="menuOpen" (click)="$event.stopPropagation()">
             <div class="hub__dropdown-header">
               <div class="hub__avatar hub__avatar--lg" [style.background]="avatarBg">
-                <span *ngIf="!customAvatar">{{ initials }}</span>
+                <span *ngIf="!hasPhoto">{{ initials }}</span>
               </div>
               <div>
                 <div class="hub__dropdown-name">{{ data.user.name }}</div>
@@ -80,7 +80,7 @@ import { HubService } from './hub.service';
 
         <div class="hub__modal-section">
           <div class="hub__avatar hub__avatar--xl" [style.background]="avatarBg">
-            <span *ngIf="!customAvatar">{{ initials }}</span>
+            <span *ngIf="!hasPhoto">{{ initials }}</span>
           </div>
           <label class="hub__btn-secondary">
             Zmień avatar
@@ -456,6 +456,7 @@ export class HubComponent implements OnInit {
   menuOpen = false;
   settingsOpen = false;
   customAvatar: string | null = null;
+  profilePhoto: string | null = null;
   lightTheme = false;
 
   constructor(
@@ -470,9 +471,14 @@ export class HubComponent implements OnInit {
   }
 
   get avatarBg(): string {
-    return this.customAvatar
-      ? `url(${this.customAvatar}) center/cover no-repeat`
+    const img = this.customAvatar || this.profilePhoto;
+    return img
+      ? `url(${img}) center/cover no-repeat`
       : 'linear-gradient(135deg, rgb(211,23,46), rgb(150,10,30))';
+  }
+
+  get hasPhoto(): boolean {
+    return !!(this.customAvatar || this.profilePhoto);
   }
 
   get isAdmin(): boolean {
@@ -536,8 +542,20 @@ export class HubComponent implements OnInit {
     }
   }
 
+  private loadProfilePhoto(): void {
+    const token = this.auth.getGraphToken();
+    if (!token) return;
+    fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(r => r.ok ? r.blob() : null)
+      .then(blob => { if (blob) this.profilePhoto = URL.createObjectURL(blob); })
+      .catch(() => {});
+  }
+
   ngOnInit(): void {
     this.customAvatar = localStorage.getItem('hub_avatar');
+    this.loadProfilePhoto();
     const savedTheme = localStorage.getItem('hub_theme');
     if (savedTheme === 'light') {
       this.lightTheme = true;
