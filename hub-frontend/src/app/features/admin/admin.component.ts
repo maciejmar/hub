@@ -127,9 +127,11 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
                 {{ healthLabel(app.id) }}
               </span>
             </td>
-            <td class="actions">
-              <button class="btn btn--sm" type="button" (click)="openEdit(app)">Edytuj</button>
-              <button class="btn btn--sm btn--danger" type="button" (click)="remove(app.id)">Usun</button>
+            <td>
+              <div class="actions">
+                <button class="btn btn--sm" type="button" (click)="openEdit(app)">Edytuj</button>
+                <button class="btn btn--sm btn--danger" type="button" (click)="remove(app.id)">Usun</button>
+              </div>
             </td>
           </tr>
         </tbody>
