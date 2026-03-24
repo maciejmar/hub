@@ -14,7 +14,7 @@ import { OidcAuthService } from '../../core/auth/oidc-auth.service';
     <section class="login">
       <div class="login__card">
         <p class="login__kicker">Single Sign-On</p>
-        <h1>Hub Aplikacji</h1>
+        <h1>Portal aplikacji AI</h1>
         <p class="login__lead">
           Jedno logowanie, wiele narzedzi dostarczonych przez ZRAI
         </p>
