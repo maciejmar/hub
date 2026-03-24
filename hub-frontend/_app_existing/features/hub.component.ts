@@ -6,7 +6,7 @@ import { OidcAuthService } from '../core/auth/oidc-auth.service';
   selector: 'app-hub',
   standalone: true,
   template: `
-    <h1>Hub aplikacji</h1>
+    <h1>Portal aplikacji AI</h1>
     <p>Sesja SSO aktywna. Mozesz przechodzic do podpietych aplikacji.</p>
     <button type="button" (click)="logout()">Wyloguj</button>
   `,

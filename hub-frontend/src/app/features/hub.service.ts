@@ -46,4 +46,8 @@ export class HubService {
   adminDeleteApp(id: string): Observable<void> {
     return this.http.delete<void>(`${environment.apiBaseUrl}/admin/apps/${id}`);
   }
+
+  adminCheckHealth(): Observable<Record<string, string>> {
+    return this.http.get<Record<string, string>>(`${environment.apiBaseUrl}/admin/health`);
+  }
 }

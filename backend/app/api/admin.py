@@ -1,3 +1,4 @@
+import httpx
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -14,6 +15,25 @@ def require_admin(claims: dict = Depends(get_current_oidc_user)) -> dict:
     if "hub-admin" not in roles:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin role required")
     return claims
+
+
+@router.get("/health")
+async def check_health(
+    _claims: dict = Depends(require_admin),
+    db: Session = Depends(get_db),
+) -> dict:
+    apps = db.query(CatalogApp).all()
+    results: dict[str, str] = {}
+    async with httpx.AsyncClient(timeout=4.0, follow_redirects=True) as client:
+        for app in apps:
+            try:
+                r = await client.get(app.url)
+                results[app.id] = "active" if r.status_code == 200 else "inactive"
+            except httpx.TimeoutException:
+                results[app.id] = "timeout"
+            except Exception:
+                results[app.id] = "building"
+    return results
 
 
 @router.get("/apps", response_model=list[CatalogAppRead])

@@ -38,6 +38,9 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
       <!-- Add button -->
       <div class="toolbar" *ngIf="!showForm">
         <button class="btn btn--primary" type="button" (click)="openCreate()">+ Dodaj aplikacje</button>
+        <button class="btn" type="button" (click)="checkHealth()" [disabled]="healthChecking">
+          {{ healthChecking ? 'Sprawdzam...' : '🔍 Sprawdź dostępność' }}
+        </button>
       </div>
 
       <!-- Form: create / edit -->
@@ -100,6 +103,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
             <th>Role</th>
             <th>Kolejnosc</th>
             <th>Status</th>
+            <th>Dostępność</th>
             <th>Akcje</th>
           </tr>
         </thead>
@@ -116,6 +120,11 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
             <td>
               <span class="status" [class.status--on]="app.is_active">
                 {{ app.is_active ? 'Aktywna' : 'Ukryta' }}
+              </span>
+            </td>
+            <td>
+              <span class="health-badge" [class]="'health-badge--' + (health[app.id] || '')">
+                {{ healthLabel(app.id) }}
               </span>
             </td>
             <td class="actions">
@@ -173,6 +182,12 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
     .badge--empty { background: rgba(45, 212, 191, 0.15); color: var(--accent-a); border: 1px solid rgba(45, 212, 191, 0.25); }
     .status { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(244, 63, 94, 0.15); color: var(--danger-a); border: 1px solid rgba(244, 63, 94, 0.25); }
     .status--on { background: rgba(45, 212, 191, 0.15); color: var(--accent-a); border: 1px solid rgba(45, 212, 191, 0.25); }
+
+    .health-badge { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--surface); color: var(--text-muted); border: 1px solid var(--line); }
+    .health-badge--active { background: rgba(45, 212, 191, 0.15); color: var(--accent-a); border: 1px solid rgba(45, 212, 191, 0.25); }
+    .health-badge--inactive { background: rgba(251, 146, 60, 0.15); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+    .health-badge--timeout { background: rgba(250, 204, 21, 0.15); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.3); }
+    .health-badge--building { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.25); }
   `,
 })
 export class AdminComponent implements OnInit {
@@ -182,6 +197,8 @@ export class AdminComponent implements OnInit {
   showForm = false;
   editingId: string | null = null;
   form: CatalogApp = EMPTY_FORM();
+  healthChecking = false;
+  health: Record<string, string> = {};
 
   constructor(
     private readonly hubService: HubService,
@@ -258,6 +275,23 @@ export class AdminComponent implements OnInit {
 
   displayRole(role: string): string {
     return role === 'hub-admin' ? 'admin' : role;
+  }
+
+  checkHealth(): void {
+    this.healthChecking = true;
+    this.hubService.adminCheckHealth().subscribe({
+      next: (result) => { this.health = result; this.healthChecking = false; },
+      error: () => { this.error = 'Blad sprawdzania dostepnosci.'; this.healthChecking = false; },
+    });
+  }
+
+  healthLabel(id: string): string {
+    const s = this.health[id];
+    if (!s) return '—';
+    if (s === 'active') return 'Aktywna';
+    if (s === 'inactive') return 'Nieaktywna';
+    if (s === 'timeout') return 'Timeout';
+    return 'W budowie';
   }
 
   goBack(): void {
