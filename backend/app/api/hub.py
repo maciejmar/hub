@@ -28,6 +28,7 @@ async def list_apps(
             "name": app.name,
             "description": app.description,
             "url": app.url,
+            "status": app.status,
         }
         for app in all_apps
         if not app.required_roles_list or user_roles.intersection(app.required_roles_list)
