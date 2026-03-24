@@ -109,7 +109,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
             <td>{{ app.name }}</td>
             <td><a [href]="app.url" target="_blank" rel="noopener">{{ app.url }}</a></td>
             <td>
-              <span class="badge" *ngFor="let r of splitRoles(app.required_roles)">{{ r }}</span>
+              <span class="badge" *ngFor="let r of splitRoles(app.required_roles)">{{ displayRole(r) }}</span>
               <span class="badge badge--empty" *ngIf="!app.required_roles">wszyscy</span>
             </td>
             <td>{{ app.sort_order }}</td>
@@ -254,6 +254,10 @@ export class AdminComponent implements OnInit {
 
   splitRoles(roles: string): string[] {
     return roles ? roles.split(',').map((r) => r.trim()).filter(Boolean) : [];
+  }
+
+  displayRole(role: string): string {
+    return role === 'hub-admin' ? 'admin' : role;
   }
 
   goBack(): void {
