@@ -17,6 +17,7 @@ class CatalogApp(Base):
     required_roles: Mapped[str] = mapped_column(String(512), nullable=False, default="")
     sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="active")
 
     @property
     def required_roles_list(self) -> list[str]:

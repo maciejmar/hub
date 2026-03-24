@@ -8,6 +8,7 @@ class CatalogAppBase(BaseModel):
     required_roles: str = Field("", max_length=512, description="Comma-separated role names, e.g. 'hub-admin'")
     sort_order: int = Field(0, ge=0)
     is_active: bool = True
+    status: str = Field("active", pattern=r"^(active|orange|gray)$")
 
 
 class CatalogAppCreate(CatalogAppBase):

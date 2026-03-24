@@ -14,6 +14,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
   required_roles: '',
   sort_order: 0,
   is_active: true,
+  status: 'active',
 });
 
 @Component({
@@ -69,6 +70,14 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
         <label>
           Kolejnosc
           <input type="number" [(ngModel)]="form.sort_order" name="sort_order" min="0" />
+        </label>
+        <label>
+          Status
+          <select [(ngModel)]="form.status" name="status">
+            <option value="active">🟢 Aktywna</option>
+            <option value="orange">🟠 W budowie</option>
+            <option value="gray">⚫ Planowana</option>
+          </select>
         </label>
         <label class="label--checkbox">
           <input type="checkbox" [(ngModel)]="form.is_active" name="is_active" />
@@ -148,6 +157,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
     label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
     label input[type=text], label input[type=url], label input[type=number] { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; background: var(--surface-strong); color: var(--text-main); font-family: inherit; }
     label input[type=text]:focus, label input[type=url]:focus, label input[type=number]:focus { outline: 1px solid var(--accent-b); }
+    label select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; background: var(--surface-strong); color: var(--text-main); font-family: inherit; }
     .label--checkbox { flex-direction: row; align-items: center; gap: 8px; display: flex; font-size: 14px; }
     .form__actions { display: flex; gap: 8px; margin-top: 4px; }
 

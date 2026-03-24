@@ -6,6 +6,7 @@ export interface CatalogApp {
   required_roles: string;
   sort_order: number;
   is_active: boolean;
+  status: string;
 }
 
 export interface HubApp {
@@ -13,6 +14,7 @@ export interface HubApp {
   name: string;
   description: string;
   url: string;
+  status: string;
 }
 
 export interface HubUser {
