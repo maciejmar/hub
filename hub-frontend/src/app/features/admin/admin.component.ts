@@ -172,7 +172,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
 
     .table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .table th { text-align: left; padding: 8px 10px; background: var(--surface); color: var(--text-muted); border-bottom: 2px solid var(--line); white-space: nowrap; }
-    .table td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; color: var(--text-main); }
+    .table td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; color: var(--text-main); height: 42px; box-sizing: border-box; }
     .row--inactive td { opacity: 0.45; }
     .table a { color: var(--accent-b); }
     .actions { display: flex; gap: 6px; white-space: nowrap; }
@@ -183,7 +183,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
     .status { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(244, 63, 94, 0.15); color: var(--danger-a); border: 1px solid rgba(244, 63, 94, 0.25); }
     .status--on { background: rgba(45, 212, 191, 0.15); color: var(--accent-a); border: 1px solid rgba(45, 212, 191, 0.25); }
 
-    .health-badge { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--surface); color: var(--text-muted); border: 1px solid var(--line); }
+    .health-badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--surface); color: var(--text-muted); border: 1px solid var(--line); vertical-align: middle; line-height: 1.4; }
     .health-badge--active { background: rgba(45, 212, 191, 0.15); color: var(--accent-a); border: 1px solid rgba(45, 212, 191, 0.25); }
     .health-badge--inactive { background: rgba(251, 146, 60, 0.15); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
     .health-badge--timeout { background: rgba(250, 204, 21, 0.15); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.3); }
