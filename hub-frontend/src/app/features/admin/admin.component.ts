@@ -103,7 +103,6 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
             <th>URL</th>
             <th>Role</th>
             <th>Kolejność</th>
-            <th>Status</th>
             <th>Dostępność</th>
             <th>Akcje</th>
           </tr>
@@ -118,11 +117,6 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
               <span class="badge badge--empty" *ngIf="!app.required_roles">wszyscy</span>
             </td>
             <td>{{ app.sort_order }}</td>
-            <td>
-              <span class="status" [class.status--on]="app.is_active">
-                {{ app.is_active ? 'Aktywna' : 'Ukryta' }}
-              </span>
-            </td>
             <td>
               <span class="health-badge" [class.health-badge--active]="health[app.id]==='active'" [class.health-badge--inactive]="health[app.id]==='inactive'" [class.health-badge--timeout]="health[app.id]==='timeout'" [class.health-badge--building]="health[app.id]==='building'">
                 {{ healthLabel(app.id) }}
