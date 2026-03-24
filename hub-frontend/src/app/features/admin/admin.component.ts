@@ -41,6 +41,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
         <button class="btn" type="button" (click)="checkHealth()" [disabled]="healthChecking">
           {{ healthChecking ? 'Sprawdzam...' : '🔍 Sprawdź dostępność' }}
         </button>
+        <span class="state state--error" *ngIf="healthError">{{ healthError }}</span>
       </div>
 
       <!-- Form: create / edit -->
@@ -201,6 +202,7 @@ export class AdminComponent implements OnInit {
   form: CatalogApp = EMPTY_FORM();
   healthChecking = false;
   health: Record<string, string> = {};
+  healthError = '';
 
   constructor(
     private readonly hubService: HubService,
@@ -283,7 +285,7 @@ export class AdminComponent implements OnInit {
     this.healthChecking = true;
     this.hubService.adminCheckHealth().subscribe({
       next: (result) => { this.health = result; this.healthChecking = false; },
-      error: (err) => { this.error = `Błąd sprawdzania dostępności (${err?.status ?? '?'}): ${err?.error?.detail ?? err?.message ?? 'nieznany błąd'}`; this.healthChecking = false; },
+      error: (err) => { this.healthError = `Błąd sprawdzania dostępności (${err?.status ?? '?'}): ${err?.error?.detail ?? err?.message ?? 'nieznany błąd'}`; this.healthChecking = false; },
     });
   }
 
