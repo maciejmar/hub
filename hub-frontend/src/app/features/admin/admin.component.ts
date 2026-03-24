@@ -32,12 +32,12 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
         <button class="btn btn--back" type="button" (click)="goBack()">← Powrot do Huba</button>
       </header>
 
-      <p class="state" *ngIf="loading">Ladowanie...</p>
+      <p class="state" *ngIf="loading">Ładowanie...</p>
       <p class="state state--error" *ngIf="error">{{ error }}</p>
 
       <!-- Add button -->
       <div class="toolbar" *ngIf="!showForm">
-        <button class="btn btn--primary" type="button" (click)="openCreate()">+ Dodaj aplikacje</button>
+        <button class="btn btn--primary" type="button" (click)="openCreate()">+ Dodaj aplikację</button>
         <button class="btn" type="button" (click)="checkHealth()" [disabled]="healthChecking">
           {{ healthChecking ? 'Sprawdzam...' : '🔍 Sprawdź dostępność' }}
         </button>
@@ -45,7 +45,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
 
       <!-- Form: create / edit -->
       <form class="form" *ngIf="showForm" (ngSubmit)="saveForm()">
-        <h2>{{ editingId ? 'Edytuj aplikacje' : 'Nowa aplikacja' }}</h2>
+        <h2>{{ editingId ? 'Edytuj aplikację' : 'Nowa aplikacja' }}</h2>
 
         <label>
           ID (slug, np. <em>my-app</em>)
@@ -59,7 +59,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
         </label>
         <label>
           Opis
-          <input type="text" [(ngModel)]="form.description" name="description" placeholder="Krotki opis" />
+          <input type="text" [(ngModel)]="form.description" name="description" placeholder="Krótki opis" />
         </label>
         <label>
           URL
@@ -71,7 +71,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
                  placeholder="hub-admin, inne-role" />
         </label>
         <label>
-          Kolejnosc
+          Kolejność
           <input type="number" [(ngModel)]="form.sort_order" name="sort_order" min="0" />
         </label>
         <label>
@@ -101,7 +101,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
             <th>Nazwa</th>
             <th>URL</th>
             <th>Role</th>
-            <th>Kolejnosc</th>
+            <th>Kolejność</th>
             <th>Status</th>
             <th>Dostępność</th>
             <th>Akcje</th>
@@ -130,7 +130,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
             <td>
               <div class="actions">
                 <button class="btn btn--sm" type="button" (click)="openEdit(app)">Edytuj</button>
-                <button class="btn btn--sm btn--danger" type="button" (click)="remove(app.id)">Usun</button>
+                <button class="btn btn--sm btn--danger" type="button" (click)="remove(app.id)">Usuń</button>
               </div>
             </td>
           </tr>
@@ -138,7 +138,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
       </table>
 
       <p class="state" *ngIf="!loading && apps.length === 0 && !error">
-        Brak aplikacji. Dodaj pierwsza aplikacje.
+        Brak aplikacji. Dodaj pierwszą aplikację.
       </p>
     </section>
   `,
@@ -219,7 +219,7 @@ export class AdminComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.error = 'Nie udalo sie zaladowac aplikacji.';
+        this.error = 'Nie udało się załadować aplikacji.';
         this.loading = false;
       },
     });
@@ -247,21 +247,21 @@ export class AdminComponent implements OnInit {
       const { id, ...rest } = this.form;
       this.hubService.adminUpdateApp(this.editingId, rest).subscribe({
         next: () => { this.closeForm(); this.load(); },
-        error: (err) => { this.error = err?.error?.detail ?? 'Blad zapisu.'; },
+        error: (err) => { this.error = err?.error?.detail ?? 'Błąd zapisu.'; },
       });
     } else {
       this.hubService.adminCreateApp(this.form).subscribe({
         next: () => { this.closeForm(); this.load(); },
-        error: (err) => { this.error = err?.error?.detail ?? 'Blad tworzenia.'; },
+        error: (err) => { this.error = err?.error?.detail ?? 'Błąd tworzenia.'; },
       });
     }
   }
 
   remove(id: string): void {
-    if (!confirm(`Usunac aplikacje "${id}"?`)) return;
+    if (!confirm(`Usunąć aplikację "${id}"?`)) return;
     this.hubService.adminDeleteApp(id).subscribe({
       next: () => this.load(),
-      error: (err) => { this.error = err?.error?.detail ?? 'Blad usuwania.'; },
+      error: (err) => { this.error = err?.error?.detail ?? 'Błąd usuwania.'; },
     });
   }
 
@@ -283,7 +283,7 @@ export class AdminComponent implements OnInit {
     this.healthChecking = true;
     this.hubService.adminCheckHealth().subscribe({
       next: (result) => { this.health = result; this.healthChecking = false; },
-      error: () => { this.error = 'Blad sprawdzania dostepnosci.'; this.healthChecking = false; },
+      error: (err) => { this.error = `Błąd sprawdzania dostępności (${err?.status ?? '?'}): ${err?.error?.detail ?? err?.message ?? 'nieznany błąd'}`; this.healthChecking = false; },
     });
   }
 
