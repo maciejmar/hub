@@ -63,7 +63,8 @@ import { HubService } from './hub.service';
 
       <div class="hub__grid" *ngIf="data">
         <article class="hub__card" *ngFor="let app of visibleApps">
-          <h2>{{ app.name }}<span class="hub__status-dot" [class]="'hub__status-dot--' + (app.status || 'active')"></span></h2>
+          <span class="hub__status-dot" [class]="'hub__status-dot--' + (app.status || 'active')"></span>
+          <h2>{{ app.name }}</h2>
           <p>{{ app.description }}</p>
           <button class="hub__open" type="button" (click)="open(app.url)">Zacznij pracę z aplikacją</button>
         </article>
@@ -282,6 +283,7 @@ import { HubService } from './hub.service';
       gap: 14px;
     }
     .hub__card {
+      position: relative;
       display: flex;
       flex-direction: column;
       border: 1px solid var(--line);
@@ -301,21 +303,19 @@ import { HubService } from './hub.service';
       margin: 0 0 8px;
       font-size: 18px;
       color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
     .hub__status-dot {
-      display: inline-block;
-      width: 11px;
-      height: 11px;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       flex-shrink: 0;
-      box-shadow: 0 0 6px currentColor;
     }
-    .hub__status-dot--active { background: #22c55e; color: #22c55e; }
-    .hub__status-dot--orange { background: #f97316; color: #f97316; }
-    .hub__status-dot--gray   { background: #6b7280; color: #6b7280; box-shadow: none; }
+    .hub__status-dot--active { background: #22c55e; box-shadow: 0 0 7px #22c55e; }
+    .hub__status-dot--orange { background: #f97316; box-shadow: 0 0 7px #f97316; }
+    .hub__status-dot--gray   { background: #6b7280; }
     .hub__card p {
       margin: 0 0 14px;
       color: var(--text-muted);
