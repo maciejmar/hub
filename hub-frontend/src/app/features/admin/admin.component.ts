@@ -289,7 +289,7 @@ export class AdminComponent implements OnInit {
     if (s === 'active') return 'Aktywna';
     if (s === 'inactive') return 'Nieaktywna';
     if (s === 'timeout') return 'Timeout';
-    return 'W budowie';
+    return 'Nieaktywna';
   }
 
   goBack(): void {
