@@ -33,7 +33,7 @@ Browser
 - **SQLAlchemy** — ORM z Mapped/mapped_column (styl deklaratywny)
 - **psycopg2** — PostgreSQL adapter
 - **python-jose** — JWT weryfikacja
-- **httpx** — HTTP klient (do OIDC JWKS fetch)
+- **httpx** — HTTP klient (do OIDC JWKS fetch + health check aplikacji)
 - **pydantic-settings** — konfiguracja z `.env`
 - **uvicorn** — ASGI server
 
@@ -63,9 +63,12 @@ npx ng serve --port 4200 --host 0.0.0.0
 ```bash
 # Z katalogu głównego
 docker compose up -d
-docker compose up --build -d   # po zmianie kodu backendu
+docker compose up --build -d hub-backend   # po zmianie kodu backendu (tylko backend)
+docker compose up --build -d               # pełny rebuild wszystkiego
 docker logs hub-backend --tail=30
 ```
+
+> **Ważne**: `docker compose restart` NIE przebudowuje obrazu. Zawsze używaj `--build` po zmianie kodu Pythona.
 
 ### Na Azure VM (produkcja)
 ```bash
@@ -145,8 +148,11 @@ Implementacja: `oidc-auth.service.ts` → `getAccessToken()` zwraca `getIdToken(
 | `backend/app/main.py` | FastAPI startup, seed bazy danych, CORS |
 | `backend/app/dependencies/oidc_auth.py` | Weryfikacja JWT — dependency dla chronionych endpointów |
 | `backend/app/api/hub.py` | Endpoint `/hub/apps` — filtruje apps po rolach |
-| `backend/app/api/admin.py` | CRUD catalog_apps — wymaga roli `hub-admin` |
-| `backend/app/models/catalog_app.py` | Model tabeli `catalog_apps` |
+| `backend/app/api/admin.py` | CRUD catalog_apps + `/admin/health` (httpx health check) — wymaga roli `hub-admin` |
+| `backend/app/models/catalog_app.py` | Model tabeli `catalog_apps` (pola: id, name, description, url, required_roles, sort_order, is_active, status) |
+| `backend/app/schemas/catalog_app.py` | Pydantic schematy — status: `active\|orange\|gray` |
+| `hub-frontend/src/app/features/admin/admin.component.ts` | Panel admina — CRUD + health check aplikacji |
+| `hub-frontend/src/styles.css` | Globalne style, zmienne CSS, dark/light theme |
 | `docker-compose.yml` | Backend + postgres + keycloak (keycloak nieużywany produkcyjnie) |
 | `/etc/nginx/sites-available/ai-apps-portal-test` | Nginx config na Azure VM |
 
@@ -177,6 +183,7 @@ location / {
 - **Backend**: dependency injection przez `Depends()` — `get_current_oidc_user` chroni endpointy
 - **Nazewnictwo tabel**: `catalog_apps` (z 's' — nie `catalog_app`)
 - **Git**: aktywna gałąź robocza to `prez2`; `master` to gałąź produkcyjna/stabilna
+- **sort_order**: zaczyna się od 1 (nie 0), jest unikalny i ciągły 1..N — backend automatycznie przesuwa pozostałe aplikacje przy każdej operacji CRUD
 
 ---
 
@@ -198,4 +205,19 @@ location / {
 
 8. **Motyw i avatar**: przechowywane w `localStorage` (`hub_theme`, `hub_avatar`). Motyw aplikowany przez klasę `light-theme` na `body`.
 
-9. **Loga BGK**: `bgk-logo-white.svg` dla ciemnego motywu, `bgk-logo.svg` dla jasnego. Pliki w `hub-frontend/src/` (serwowane jako root przez Angular).
+9. **Loga BGK**: `bgk-logo-white.svg` dla ciemnego motywu, `bgk-logo.svg` dla jasnego, `bgk-logo-black.svg` dla jasnego motywu (login page). Pliki w `hub-frontend/src/` (serwowane jako root przez Angular).
+
+10. **Status aplikacji w bazie**: pole `status` w `catalog_apps` — wartości: `active` (zielona kropka), `orange` (pomarańczowa), `gray` (szara). Widoczne jako kolorowa kropka w prawym górnym rogu kafelka na dashboardzie. Kolumna musi istnieć w DB — jeśli nie: `ALTER TABLE catalog_apps ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'active'`.
+
+11. **Health check** (`/admin/health`): backend wykonuje HTTP GET do URL każdej aplikacji i zwraca `active` (200), `inactive` (inny kod), `timeout`, lub `building` (wyjątek). Endpoint wymaga roli `hub-admin`. Po każdej zmianie backendu trzeba przebudować Docker.
+
+12. **Scope `User.Read` zablokowany**: dodanie scope `User.Read` do OIDC powoduje wymaganie zgody administratora BGK w Azure Portal. Nie dodawać bez wcześniejszej zgody admina. Zdjęcia profilowe z Graph API są niedostępne bez tej zgody.
+
+13. **sort_order — ciągłość 1..N**: backend (`admin.py`) zawiera helper `_reorder_apps(db, moving_id, new_order)` który po każdej operacji (create/update/delete) renumeruje wszystkie aplikacje tak by sort_order był unikalny i ciągły od 1. Przy wdrożeniu nowej wersji backendu warto wyrównać istniejące dane:
+    ```sql
+    UPDATE catalog_apps SET sort_order = subq.rn
+    FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY sort_order) AS rn FROM catalog_apps) subq
+    WHERE catalog_apps.id = subq.id;
+    ```
+
+14. **Tabela wierszy w panelu admina**: `td` z `display: flex` (klasa `.actions`) powoduje przesunięcie `border-bottom` przy `border-collapse: collapse`. Przyciski Edytuj/Usuń muszą być w `<div class="actions">` wewnątrz `<td>`, nie bezpośrednio na `<td>`.

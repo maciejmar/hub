@@ -17,6 +17,23 @@ def require_admin(claims: dict = Depends(get_current_oidc_user)) -> dict:
     return claims
 
 
+def _reorder_apps(db: Session, moving_id: str | None = None, new_order: int | None = None) -> None:
+    """Renumeruje wszystkie aplikacje 1..N. Jeśli podano moving_id i new_order,
+    najpierw wstawia tę aplikację na żądaną pozycję, a pozostałe przesuwa."""
+    apps = db.query(CatalogApp).order_by(CatalogApp.sort_order).all()
+
+    if moving_id is not None and new_order is not None:
+        moving_app = next((a for a in apps if a.id == moving_id), None)
+        if moving_app:
+            others = [a for a in apps if a.id != moving_id]
+            clamped = max(1, min(new_order, len(apps)))
+            others.insert(clamped - 1, moving_app)
+            apps = others
+
+    for i, app in enumerate(apps, start=1):
+        app.sort_order = i
+
+
 @router.get("/health")
 async def check_health(
     _claims: dict = Depends(require_admin),
@@ -56,6 +73,8 @@ def create_app(
 
     app = CatalogApp(**payload.model_dump())
     db.add(app)
+    db.flush()
+    _reorder_apps(db, moving_id=app.id, new_order=payload.sort_order)
     db.commit()
     db.refresh(app)
     return app
@@ -75,6 +94,7 @@ def update_app(
     for field, value in payload.model_dump().items():
         setattr(app, field, value)
 
+    _reorder_apps(db, moving_id=app_id, new_order=payload.sort_order)
     db.commit()
     db.refresh(app)
     return app
@@ -91,4 +111,6 @@ def delete_app(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="App not found")
 
     db.delete(app)
+    db.flush()
+    _reorder_apps(db)
     db.commit()

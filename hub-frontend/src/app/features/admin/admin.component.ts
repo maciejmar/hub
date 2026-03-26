@@ -12,7 +12,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
   description: '',
   url: '',
   required_roles: '',
-  sort_order: 0,
+  sort_order: 1,
   is_active: true,
   status: 'active',
 });
@@ -73,7 +73,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
         </label>
         <label>
           Kolejność
-          <input type="number" [(ngModel)]="form.sort_order" name="sort_order" min="0" />
+          <input type="number" [(ngModel)]="form.sort_order" name="sort_order" min="1" />
         </label>
         <label>
           Status
