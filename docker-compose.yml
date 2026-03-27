@@ -45,6 +45,8 @@ services:
   backend:
     build:
       context: ./backend
+      secrets:
+        - pip_conf
     container_name: hub-backend
     depends_on:
       - hub-postgres
@@ -55,10 +57,15 @@ services:
       OIDC_ISSUER_URL: https://login.microsoftonline.com/29bb5b9c-200a-4906-89ef-c651c86ab301/v2.0
       OIDC_DISCOVERY_URL: https://login.microsoftonline.com/29bb5b9c-200a-4906-89ef-c651c86ab301/v2.0/.well-known/openid-configuration
       OIDC_AUDIENCE: "e517ed53-e3c5-42b4-b8c9-e35974e369ee"
-      BACKEND_CORS_ORIGINS: http://localhost:4200,https://ai-apps-portal-test.northeurope.cloudapp.azure.com
+      # BACKEND_CORS_ORIGINS: http://localhost:4200,https://ai-apps-portal-test.northeurope.cloudapp.azure.com  # stara domena Azure VM
+      BACKEND_CORS_ORIGINS: http://localhost:4200,https://10.112.32.19/portal
     ports:
       - "${HUB_BACKEND_PORT:-18000}:8000"
 
 volumes:
   hub_pg_data:
   keycloak_pg_data:
+
+secrets:
+  pip_conf:
+    file: /etc/pip.conf
