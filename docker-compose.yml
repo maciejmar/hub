@@ -1,6 +1,7 @@
 services:
   hub-postgres:
-    image: postgres:16
+    # image: postgres:16  # Docker Hub — niedostępne w sieci BGK
+    image: repo.bank.com.pl/zrai-docker-remote-dev/postgres:16
     container_name: hub-postgres
     environment:
       POSTGRES_USER: postgres
@@ -12,7 +13,8 @@ services:
       - hub_pg_data:/var/lib/postgresql/data
 
   keycloak-postgres:
-    image: postgres:16
+    # image: postgres:16  # Docker Hub — niedostępne w sieci BGK
+    image: repo.bank.com.pl/zrai-docker-remote-dev/postgres:16
     container_name: keycloak-postgres
     environment:
       POSTGRES_USER: keycloak
