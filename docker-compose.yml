@@ -42,6 +42,22 @@ services:
     volumes:
       - ./infra/keycloak/realm-hub.json:/opt/keycloak/data/import/realm-hub.json:ro
 
+  frontend:
+    build:
+      context: ./hub-frontend
+      network: host
+      secrets:
+        - ca_cert
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-}
+        NPM_AUTH_TOKEN: ${NPM_AUTH_TOKEN:-}
+    container_name: hub-frontend
+    restart: unless-stopped
+    ports:
+      - "${HUB_FRONTEND_PORT:-4200}:80"
+    depends_on:
+      - backend
+
   backend:
     build:
       context: ./backend
@@ -70,3 +86,5 @@ volumes:
 secrets:
   pip_conf:
     file: /etc/pip.conf
+  ca_cert:
+    file: /etc/pki/ca-trust/source/anchors/bank-jfrog-ca.crt
