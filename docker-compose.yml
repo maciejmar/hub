@@ -58,7 +58,8 @@ services:
       OIDC_DISCOVERY_URL: https://login.microsoftonline.com/29bb5b9c-200a-4906-89ef-c651c86ab301/v2.0/.well-known/openid-configuration
       OIDC_AUDIENCE: "e517ed53-e3c5-42b4-b8c9-e35974e369ee"
       # BACKEND_CORS_ORIGINS: http://localhost:4200,https://ai-apps-portal-test.northeurope.cloudapp.azure.com  # stara domena Azure VM
-      BACKEND_CORS_ORIGINS: http://localhost:4200,https://10.112.32.19/portal
+      # BACKEND_CORS_ORIGINS: http://localhost:4200,https://10.112.32.19/portal  # stary adres IP sandbox
+      BACKEND_CORS_ORIGINS: http://localhost:4200,https://portal-ai.bank.com.pl/portal
     ports:
       - "${HUB_BACKEND_PORT:-18000}:8000"
 
