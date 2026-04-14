@@ -549,11 +549,7 @@ export class HubComponent implements OnInit {
   }
 
   open(url: string): void {
-    if (url.startsWith(window.location.origin)) {
-      this.router.navigateByUrl(url.replace(window.location.origin, ''));
-    } else {
-      window.open(url, '_blank', 'noopener');
-    }
+    window.open(url, '_blank', 'noopener');
   }
 
   private loadProfilePhoto(): void {
