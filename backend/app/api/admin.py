@@ -41,7 +41,7 @@ async def check_health(
 ) -> dict:
     apps = db.query(CatalogApp).all()
     results: dict[str, str] = {}
-    async with httpx.AsyncClient(timeout=4.0, follow_redirects=True, verify=False) as client:
+    async with httpx.AsyncClient(timeout=4.0, follow_redirects=True) as client:
         for app in apps:
             try:
                 r = await client.get(app.url)
