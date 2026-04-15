@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, tap } from 'rxjs';
 
 import { environment } from '../environment';
-import { CatalogApp, HubAppsResponse } from './hub.models';
+import { CatalogApp, HubApp, HubAppsResponse } from './hub.models';
 
 @Injectable({ providedIn: 'root' })
 export class HubService {

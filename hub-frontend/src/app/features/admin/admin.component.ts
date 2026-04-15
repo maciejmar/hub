@@ -15,6 +15,7 @@ const EMPTY_FORM = (): Omit<CatalogApp, never> => ({
   sort_order: 1,
   is_active: true,
   status: 'active',
+  is_system: false,
 });
 
 @Component({
