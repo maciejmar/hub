@@ -42,6 +42,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/app-page/app-page.component').then((m) => m.AppPageComponent),
     data: { title: 'Miejsce na Wasz AI Sandbox', description: 'Wsparcie AI' },
   },
+  {
+    path: 'centrum-dowodzenia',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () => import('./features/centrum-dowodzenia/centrum-dowodzenia.component').then((m) => m.CentrumDowodzeniaComponent),
+  },
   { path: '', pathMatch: 'full', redirectTo: 'apps' },
   { path: '**', redirectTo: 'apps' },
 ];

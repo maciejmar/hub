@@ -50,4 +50,8 @@ export class HubService {
   adminCheckHealth(): Observable<Record<string, string>> {
     return this.http.get<Record<string, string>>(`${environment.apiBaseUrl}/admin/health`);
   }
+
+  getSystemApps(): Observable<{ apps: HubApp[] }> {
+    return this.http.get<{ apps: HubApp[] }>(`${environment.apiBaseUrl}/hub/system-apps`);
+  }
 }

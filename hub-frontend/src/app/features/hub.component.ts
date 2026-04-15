@@ -68,6 +68,13 @@ import { HubService } from './hub.service';
           <p>{{ app.description }}</p>
           <button class="hub__open" type="button" (click)="open(app.url)">Zacznij pracę z aplikacją</button>
         </article>
+
+        <article class="hub__card hub__card--system" *ngIf="isAdmin" (click)="openCentrumDowodzenia()">
+          <span class="hub__status-dot hub__status-dot--active"></span>
+          <h2>Centrum Dowodzenia SandboxAI</h2>
+          <p>Zarządzanie infrastrukturą i serwisami serwera</p>
+          <button class="hub__open" type="button">Wejdź</button>
+        </article>
       </div>
     </section>
 
@@ -506,6 +513,10 @@ export class HubComponent implements OnInit {
   openAdmin(): void {
     this.menuOpen = false;
     this.router.navigateByUrl('/admin');
+  }
+
+  openCentrumDowodzenia(): void {
+    this.router.navigateByUrl('/centrum-dowodzenia');
   }
 
   @HostListener('document:click')

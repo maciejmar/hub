@@ -7,6 +7,7 @@ export interface CatalogApp {
   sort_order: number;
   is_active: boolean;
   status: string;
+  is_system: boolean;
 }
 
 export interface HubApp {

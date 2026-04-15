@@ -9,6 +9,7 @@ class CatalogAppBase(BaseModel):
     sort_order: int = Field(1, ge=1)
     is_active: bool = True
     status: str = Field("active", pattern=r"^(active|orange|gray)$")
+    is_system: bool = False
 
 
 class CatalogAppCreate(CatalogAppBase):

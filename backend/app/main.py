@@ -39,7 +39,57 @@ def on_startup() -> None:
             time.sleep(delay_seconds)
 
     Base.metadata.create_all(bind=engine)
+    _migrate_schema()
     _seed_catalog()
+    _seed_system_apps()
+
+
+def _migrate_schema() -> None:
+    with engine.connect() as conn:
+        conn.execute(text(
+            "ALTER TABLE catalog_apps ADD COLUMN IF NOT EXISTS is_system BOOLEAN NOT NULL DEFAULT FALSE"
+        ))
+        conn.commit()
+
+
+def _seed_system_apps() -> None:
+    db = SessionLocal()
+    try:
+        system_apps = [
+            CatalogApp(
+                id="portainer",
+                name="Portainer",
+                description="Zarządzanie obrazami dockerowymi",
+                url="https://portal-ai.bank.com.pl/portainer",
+                required_roles="hub-admin",
+                sort_order=1,
+                is_system=True,
+            ),
+            CatalogApp(
+                id="gatus",
+                name="Gatus",
+                description="Informacje o ruchu aplikacji",
+                url="https://portal-ai.bank.com.pl/gatus",
+                required_roles="hub-admin",
+                sort_order=2,
+                is_system=True,
+            ),
+            CatalogApp(
+                id="rejestrator",
+                name="Rejestracja środowiska",
+                description="Kalendarz wynajęcia serwera",
+                url="https://portal-ai.bank.com.pl/rejestrator",
+                required_roles="hub-admin",
+                sort_order=3,
+                is_system=True,
+            ),
+        ]
+        for app in system_apps:
+            if not db.get(CatalogApp, app.id):
+                db.add(app)
+        db.commit()
+    finally:
+        db.close()
 
 
 def _seed_catalog() -> None:

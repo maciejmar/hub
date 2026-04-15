@@ -17,7 +17,7 @@ async def list_apps(
 
     all_apps = (
         db.query(CatalogApp)
-        .filter(CatalogApp.is_active.is_(True))
+        .filter(CatalogApp.is_active.is_(True), CatalogApp.is_system.is_(False))
         .order_by(CatalogApp.sort_order)
         .all()
     )
@@ -42,4 +42,35 @@ async def list_apps(
         },
         "roles": list(user_roles),
         "apps": available_apps,
+    }
+
+
+@router.get("/system-apps")
+async def list_system_apps(
+    claims: dict = Depends(get_current_oidc_user),
+    db: Session = Depends(get_db),
+):
+    user_roles: set[str] = set(claims.get("roles", []))
+    if "hub-admin" not in user_roles:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=403, detail="Admin only")
+
+    system_apps = (
+        db.query(CatalogApp)
+        .filter(CatalogApp.is_active.is_(True), CatalogApp.is_system.is_(True))
+        .order_by(CatalogApp.sort_order)
+        .all()
+    )
+
+    return {
+        "apps": [
+            {
+                "id": app.id,
+                "name": app.name,
+                "description": app.description,
+                "url": app.url,
+                "status": app.status,
+            }
+            for app in system_apps
+        ]
     }
