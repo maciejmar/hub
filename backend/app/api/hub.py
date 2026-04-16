@@ -1,5 +1,6 @@
 import httpx
 from fastapi import APIRouter, Depends
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
@@ -101,3 +102,30 @@ async def get_portainer_token(
         )
         resp.raise_for_status()
         return {"jwt": resp.json()["jwt"]}
+
+
+@router.get("/portainer-login", response_class=HTMLResponse)
+async def portainer_login_page():
+    """Strona HTML która loguje się do Portainera bezpośrednio z przeglądarki."""
+    return """<!DOCTYPE html>
+<html>
+<head><title>Portainer</title></head>
+<body style="background:#1a1a2e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0">
+  <p id="msg">Logowanie do Portainer...</p>
+  <script>
+    fetch('/portainer/api/auth', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username: 'user', password: 'portainer-user'})
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      localStorage.setItem('portainer.JWT', data.jwt);
+      window.location.replace('/portainer/');
+    })
+    .catch(function(e) {
+      document.getElementById('msg').textContent = 'Błąd logowania: ' + e.message;
+    });
+  </script>
+</body>
+</html>"""

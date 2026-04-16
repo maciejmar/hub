@@ -1,31 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HubService } from '../hub.service';
+import { environment } from '../../environment';
 
 @Component({
   selector: 'app-portainer-redirect',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#1a1a2e;color:#fff;font-family:sans-serif">
-      <p>{{ message }}</p>
+      <p>Logowanie do Portainer...</p>
     </div>
   `,
 })
 export class PortainerRedirectComponent implements OnInit {
-  message = 'Logowanie do Portainer...';
-
-  constructor(private hubService: HubService) {}
-
   ngOnInit(): void {
-    this.hubService.getPortainerToken().subscribe({
-      next: ({ jwt }) => {
-        localStorage.setItem('portainer.JWT', jwt);
-        window.location.href = '/portainer/';
-      },
-      error: () => {
-        this.message = 'Błąd logowania do Portainer.';
-      },
-    });
+    window.location.href = `${environment.apiBaseUrl}/hub/portainer-login`;
   }
 }
