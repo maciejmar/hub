@@ -21,7 +21,7 @@ export class PortainerRedirectComponent implements OnInit {
     this.hubService.getPortainerToken().subscribe({
       next: ({ jwt }) => {
         localStorage.setItem('portainer.JWT', jwt);
-        window.location.href = '/portainer/#!/home';
+        window.location.href = '/portainer/';
       },
       error: () => {
         this.message = 'Błąd logowania do Portainer.';
