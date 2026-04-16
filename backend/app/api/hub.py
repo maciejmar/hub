@@ -106,26 +106,30 @@ async def get_portainer_token(
 
 @router.get("/portainer-login", response_class=HTMLResponse)
 async def portainer_login_page():
-    """Strona HTML która loguje się do Portainera bezpośrednio z przeglądarki."""
-    return """<!DOCTYPE html>
+    """Pobiera JWT z Portainera i zwraca HTML który ustawia localStorage i przekierowuje."""
+    try:
+        async with httpx.AsyncClient(verify=False, timeout=5.0) as client:
+            resp = await client.post(
+                "http://10.112.32.19:9000/api/auth",
+                json={"username": "user", "password": "portainer-user"},
+            )
+            resp.raise_for_status()
+            jwt = resp.json()["jwt"]
+    except Exception as e:
+        return HTMLResponse(
+            content=f"""<!DOCTYPE html><html><body style="background:#1a1a2e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0">
+            <p>Błąd logowania do Portainer: {e}</p></body></html>""",
+            status_code=502,
+        )
+
+    return f"""<!DOCTYPE html>
 <html>
 <head><title>Portainer</title></head>
 <body style="background:#1a1a2e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0">
-  <p id="msg">Logowanie do Portainer...</p>
+  <p>Logowanie do Portainer...</p>
   <script>
-    fetch('/portainer/api/auth', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({username: 'user', password: 'portainer-user'})
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      localStorage.setItem('portainer.JWT', data.jwt);
-      window.location.replace('/portainer/');
-    })
-    .catch(function(e) {
-      document.getElementById('msg').textContent = 'Błąd logowania: ' + e.message;
-    });
+    localStorage.setItem('portainer.JWT', '{jwt}');
+    window.location.replace('/portainer/');
   </script>
 </body>
 </html>"""
