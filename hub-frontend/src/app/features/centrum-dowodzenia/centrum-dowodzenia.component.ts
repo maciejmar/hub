@@ -79,6 +79,24 @@ import { HubApp } from '../hub.models';
     }
     .cd__open:hover { opacity: 0.9; }
     .cd__error { padding: 32px; color: var(--text-sub); }
+    .hub__modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200;
+    }
+    .cd__unavailable-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+    }
+    .cd__unavailable-card span { font-size: 48px; display: block; margin-bottom: 16px; }
+    .cd__unavailable-card h2 { font-size: 20px; font-weight: 600; margin: 0 0 12px; color: var(--text-main); }
+    .cd__unavailable-card p { color: var(--text-sub); line-height: 1.6; margin: 0 0 24px; }
   `,
   template: `
     <div class="cd">
@@ -97,10 +115,20 @@ import { HubApp } from '../hub.models';
           </span>
           <h2>{{ app.name }}</h2>
           <p>{{ app.description }}</p>
-          <button class="cd__open" type="button" (click)="open(app.url)">
+          <button class="cd__open" type="button" (click)="open(app.name, app.url)">
             Otwórz
           </button>
         </article>
+      </div>
+    </div>
+
+    <!-- Overlay: aplikacja niedostępna -->
+    <div class="hub__modal-overlay" *ngIf="checking || unavailableAppName" (click)="closeUnavailable()">
+      <div class="cd__unavailable-card" (click)="$event.stopPropagation()">
+        <span *ngIf="!checking">🔧</span>
+        <h2>{{ checking ? 'Sprawdzanie dostępności...' : unavailableAppName }}</h2>
+        <p *ngIf="!checking">Aplikacja chwilowo niedostępna.<br>Trwają prace modernizacyjne.</p>
+        <button class="cd__open" *ngIf="!checking" (click)="closeUnavailable()">Zamknij</button>
       </div>
     </div>
   `,
@@ -108,6 +136,8 @@ import { HubApp } from '../hub.models';
 export class CentrumDowodzeniaComponent implements OnInit {
   apps: HubApp[] = [];
   error = '';
+  checking = false;
+  unavailableAppName = '';
 
   constructor(
     private readonly hubService: HubService,
@@ -125,11 +155,29 @@ export class CentrumDowodzeniaComponent implements OnInit {
     this.router.navigate(['/apps']);
   }
 
-  open(url: string): void {
+  open(appName: string, url: string): void {
     if (url.includes('/portainer')) {
       this.router.navigateByUrl('/portainer-redirect');
       return;
     }
-    window.open(url, '_blank', 'noopener');
+    this.checking = true;
+    this.hubService.checkApp(url).subscribe({
+      next: ({ available }) => {
+        this.checking = false;
+        if (available) {
+          window.open(url, '_blank', 'noopener');
+        } else {
+          this.unavailableAppName = appName;
+        }
+      },
+      error: () => {
+        this.checking = false;
+        this.unavailableAppName = appName;
+      },
+    });
+  }
+
+  closeUnavailable(): void {
+    this.unavailableAppName = '';
   }
 }

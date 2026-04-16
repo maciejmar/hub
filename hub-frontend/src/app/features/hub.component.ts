@@ -66,7 +66,7 @@ import { HubService } from './hub.service';
           <span class="hub__status-dot" [class]="'hub__status-dot--' + (app.status || 'active')"></span>
           <h2>{{ app.name }}</h2>
           <p>{{ app.description }}</p>
-          <button class="hub__open" type="button" (click)="open(app.url)">Zacznij pracę z aplikacją</button>
+          <button class="hub__open" type="button" (click)="open(app.name, app.url)">Zacznij pracę z aplikacją</button>
         </article>
 
         <article class="hub__card hub__card--system" *ngIf="isAdmin" (click)="openCentrumDowodzenia()">
@@ -77,6 +77,23 @@ import { HubService } from './hub.service';
         </article>
       </div>
     </section>
+
+    <!-- Spinner sprawdzania dostępności -->
+    <div class="hub__modal-overlay" *ngIf="checking">
+      <div class="hub__unavailable-card">
+        <p>Sprawdzanie dostępności...</p>
+      </div>
+    </div>
+
+    <!-- Overlay: aplikacja niedostępna -->
+    <div class="hub__modal-overlay" *ngIf="unavailableAppName" (click)="closeUnavailable()">
+      <div class="hub__unavailable-card" (click)="$event.stopPropagation()">
+        <span class="hub__unavailable-icon">🔧</span>
+        <h2>{{ unavailableAppName }}</h2>
+        <p>Aplikacja chwilowo niedostępna.<br>Trwają prace modernizacyjne.</p>
+        <button class="hub__open" (click)="closeUnavailable()">Zamknij</button>
+      </div>
+    </div>
 
     <!-- Settings modal -->
     <div class="hub__modal-overlay" *ngIf="settingsOpen" (click)="closeSettings()">
@@ -463,6 +480,32 @@ import { HubService } from './hub.service';
       color: var(--text-main);
     }
 
+    .hub__unavailable-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+    }
+    .hub__unavailable-icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .hub__unavailable-card h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 12px;
+      color: var(--text-main);
+    }
+    .hub__unavailable-card p {
+      color: var(--text-sub);
+      line-height: 1.6;
+      margin: 0 0 24px;
+    }
+
     @media (max-width: 640px) {
       .hub__header {
         flex-direction: column;
@@ -479,6 +522,8 @@ export class HubComponent implements OnInit {
   customAvatar: string | null = null;
   profilePhoto: string | null = null;
   lightTheme = false;
+  checking = false;
+  unavailableAppName = '';
 
   constructor(
     private readonly auth: OidcAuthService,
@@ -559,8 +604,26 @@ export class HubComponent implements OnInit {
     document.body.classList.toggle('light-theme', light);
   }
 
-  open(url: string): void {
-    window.open(url, '_blank', 'noopener');
+  open(appName: string, url: string): void {
+    this.checking = true;
+    this.hubService.checkApp(url).subscribe({
+      next: ({ available }) => {
+        this.checking = false;
+        if (available) {
+          window.open(url, '_blank', 'noopener');
+        } else {
+          this.unavailableAppName = appName;
+        }
+      },
+      error: () => {
+        this.checking = false;
+        this.unavailableAppName = appName;
+      },
+    });
+  }
+
+  closeUnavailable(): void {
+    this.unavailableAppName = '';
   }
 
   private loadProfilePhoto(): void {

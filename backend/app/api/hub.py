@@ -77,6 +77,19 @@ async def list_system_apps(
     }
 
 
+@router.get("/check")
+async def check_app(
+    url: str,
+    claims: dict = Depends(get_current_oidc_user),
+):
+    try:
+        async with httpx.AsyncClient(verify=False, timeout=3.0, follow_redirects=True) as client:
+            resp = await client.get(url)
+            return {"available": resp.status_code < 400}
+    except Exception:
+        return {"available": False}
+
+
 @router.get("/portainer-token")
 async def get_portainer_token(
     claims: dict = Depends(get_current_oidc_user),

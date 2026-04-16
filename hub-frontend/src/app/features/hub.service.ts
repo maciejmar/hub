@@ -58,4 +58,8 @@ export class HubService {
   getPortainerToken(): Observable<{ jwt: string }> {
     return this.http.get<{ jwt: string }>(`${environment.apiBaseUrl}/hub/portainer-token`);
   }
+
+  checkApp(url: string): Observable<{ available: boolean }> {
+    return this.http.get<{ available: boolean }>(`${environment.apiBaseUrl}/hub/check`, { params: { url } });
+  }
 }
