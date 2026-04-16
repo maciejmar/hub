@@ -126,6 +126,10 @@ export class CentrumDowodzeniaComponent implements OnInit {
   }
 
   open(url: string): void {
+    if (url.includes('/portainer')) {
+      this.router.navigateByUrl('/portainer-redirect');
+      return;
+    }
     window.open(url, '_blank', 'noopener');
   }
 }

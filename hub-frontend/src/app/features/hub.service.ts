@@ -54,4 +54,8 @@ export class HubService {
   getSystemApps(): Observable<{ apps: HubApp[] }> {
     return this.http.get<{ apps: HubApp[] }>(`${environment.apiBaseUrl}/hub/system-apps`);
   }
+
+  getPortainerToken(): Observable<{ jwt: string }> {
+    return this.http.get<{ jwt: string }>(`${environment.apiBaseUrl}/hub/portainer-token`);
+  }
 }

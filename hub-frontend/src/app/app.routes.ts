@@ -47,6 +47,11 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./features/centrum-dowodzenia/centrum-dowodzenia.component').then((m) => m.CentrumDowodzeniaComponent),
   },
+  {
+    path: 'portainer-redirect',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/portainer-redirect/portainer-redirect.component').then((m) => m.PortainerRedirectComponent),
+  },
   { path: '', pathMatch: 'full', redirectTo: 'apps' },
   { path: '**', redirectTo: 'apps' },
 ];

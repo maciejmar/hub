@@ -1,3 +1,4 @@
+import httpx
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -74,3 +75,16 @@ async def list_system_apps(
             for app in system_apps
         ]
     }
+
+
+@router.get("/portainer-token")
+async def get_portainer_token(
+    claims: dict = Depends(get_current_oidc_user),
+):
+    async with httpx.AsyncClient(verify=False, timeout=5.0) as client:
+        resp = await client.post(
+            "http://10.112.32.19:9000/api/auth",
+            json={"username": "user", "password": "portainer-user"},
+        )
+        resp.raise_for_status()
+        return {"jwt": resp.json()["jwt"]}
