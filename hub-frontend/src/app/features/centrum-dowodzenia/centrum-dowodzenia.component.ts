@@ -5,6 +5,15 @@ import { CommonModule } from '@angular/common';
 import { HubService } from '../hub.service';
 import { HubApp } from '../hub.models';
 
+const SCRIPT_TILES = [
+  {
+    id: 'hf',
+    name: 'HuggingFace Manager',
+    description: 'Zarządzanie modelami HuggingFace — pobieranie, lista, usuwanie.',
+    status: 'active',
+  },
+];
+
 @Component({
   selector: 'app-centrum-dowodzenia',
   standalone: true,
@@ -119,6 +128,15 @@ import { HubApp } from '../hub.models';
             Otwórz
           </button>
         </article>
+
+        <article class="cd__card" *ngFor="let s of scriptTiles">
+          <span class="cd__status-dot cd__status-dot--active"></span>
+          <h2>{{ s.name }}</h2>
+          <p>{{ s.description }}</p>
+          <button class="cd__open" type="button" (click)="openScript(s.id)">
+            Uruchom
+          </button>
+        </article>
       </div>
     </div>
 
@@ -135,6 +153,7 @@ import { HubApp } from '../hub.models';
 })
 export class CentrumDowodzeniaComponent implements OnInit {
   apps: HubApp[] = [];
+  scriptTiles = SCRIPT_TILES;
   error = '';
   checking = false;
   unavailableAppName = '';
@@ -153,6 +172,10 @@ export class CentrumDowodzeniaComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/apps']);
+  }
+
+  openScript(scriptId: string): void {
+    this.router.navigate(['/scripts', scriptId]);
   }
 
   open(appName: string, url: string): void {

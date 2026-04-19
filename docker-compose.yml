@@ -68,6 +68,8 @@ services:
       - hub-postgres
     env_file:
       - ./backend/.env
+    volumes:
+      - /data/models/scripts:/app/hf_scripts:ro
     environment:
       DATABASE_URL: postgresql+psycopg2://postgres:postgres@hub-postgres:5432/hub_db
       OIDC_ISSUER_URL: https://login.microsoftonline.com/29bb5b9c-200a-4906-89ef-c651c86ab301/v2.0

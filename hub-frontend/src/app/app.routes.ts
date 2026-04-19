@@ -52,6 +52,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/portainer-redirect/portainer-redirect.component').then((m) => m.PortainerRedirectComponent),
   },
+  {
+    path: 'scripts/:id',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () => import('./features/script-terminal/script-terminal.component').then((m) => m.ScriptTerminalComponent),
+  },
   { path: '', pathMatch: 'full', redirectTo: 'apps' },
   { path: '**', redirectTo: 'apps' },
 ];
