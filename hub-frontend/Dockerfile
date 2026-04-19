@@ -21,7 +21,7 @@ COPY package*.json ./
 # Montujemy CA cert JFrog (analogicznie do pip_conf w backendzie)
 RUN --mount=type=secret,id=ca_cert,target=/etc/ssl/certs/ca.pem \
     NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca.pem \
-    npm ci
+    npm install
 
 COPY . .
 
