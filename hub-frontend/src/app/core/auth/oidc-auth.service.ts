@@ -22,6 +22,16 @@ export class OidcAuthService {
 
   async initialize(): Promise<void> {
     await this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    if (this.oauthService.hasValidAccessToken()) {
+      const info = this.getUserInfo();
+      if (info?.email) {
+        localStorage.setItem('portal-ai-user', JSON.stringify({
+          email:       info.email,
+          displayName: info.displayName,
+          groups:      [],
+        }));
+      }
+    }
   }
 
   login(): void {
@@ -29,6 +39,7 @@ export class OidcAuthService {
   }
 
   logout(): void {
+    localStorage.removeItem('portal-ai-user');
     this.oauthService.logOut();
   }
 
