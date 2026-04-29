@@ -62,6 +62,14 @@ export class AuthCallbackComponent {
   private async finishLogin(): Promise<void> {
     await this.auth.initialize();
     if (this.auth.hasValidAccessToken()) {
+      const info = this.auth.getUserInfo();
+      if (info) {
+        localStorage.setItem('portal-ai-user', JSON.stringify({
+          email:       info.email,
+          displayName: info.displayName,
+          groups:      [],
+        }));
+      }
       this.router.navigate(['/apps']);
       return;
     }

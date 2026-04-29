@@ -42,12 +42,20 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.accessTokenKey);
     localStorage.removeItem(this.refreshTokenKey);
+    localStorage.removeItem('portal-ai-user');
     this.currentUserSubject.next(null);
   }
 
   loadCurrentUser(): Observable<User> {
     return this.http.get<User>(`${this.apiBase}/me`).pipe(
-      tap((user) => this.currentUserSubject.next(user)),
+      tap((user) => {
+        this.currentUserSubject.next(user);
+        localStorage.setItem('portal-ai-user', JSON.stringify({
+          email:       user.email,
+          displayName: user.full_name,
+          groups:      [],
+        }));
+      }),
     );
   }
 

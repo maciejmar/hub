@@ -47,4 +47,13 @@ export class OidcAuthService {
   async loadProfile(): Promise<object> {
     return this.oauthService.loadUserProfile();
   }
+
+  getUserInfo(): { email: string; displayName: string } | null {
+    const claims = this.oauthService.getIdentityClaims() as Record<string, unknown> | null;
+    if (!claims) return null;
+    return {
+      email:       (claims['email'] ?? claims['preferred_username'] ?? '') as string,
+      displayName: (claims['name'] ?? '') as string,
+    };
+  }
 }
