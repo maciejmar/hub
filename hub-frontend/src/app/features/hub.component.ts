@@ -63,7 +63,7 @@ import { HubService } from './hub.service';
 
       <div class="hub__grid" *ngIf="data">
         <article class="hub__card" *ngFor="let app of visibleApps">
-          <span class="hub__status-dot" [class]="'hub__status-dot--' + (appStatuses[app.id] || app.status || 'active')"></span>
+          <span class="hub__status-dot" [class]="'hub__status-dot--' + (app.id === 'ai-sandbox' ? 'gray' : (appStatuses[app.id] || app.status || 'active'))"></span>
           <h2>{{ app.name }}</h2>
           <p>{{ app.description }}</p>
           <button class="hub__open" type="button" (click)="open(app.name, app.url)">Zacznij pracę z aplikacją</button>
