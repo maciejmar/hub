@@ -78,6 +78,45 @@ async def list_system_apps(
     }
 
 
+@router.get("/refresh-statuses")
+async def refresh_statuses(
+    claims: dict = Depends(get_current_oidc_user),
+    db: Session = Depends(get_db),
+):
+    apps = (
+        db.query(CatalogApp)
+        .filter(CatalogApp.is_active.is_(True), CatalogApp.is_system.is_(False))
+        .all()
+    )
+
+    async def check(app: CatalogApp) -> tuple[str, str]:
+        try:
+            async with httpx.AsyncClient(verify=False, timeout=5.0, follow_redirects=True) as client:
+                resp = await client.get(app.url)
+                if resp.status_code < 300:
+                    status = "active"
+                elif resp.status_code < 400:
+                    status = "orange"
+                else:
+                    status = "inactive"
+        except Exception:
+            status = "inactive"
+        return app.id, status
+
+    import asyncio
+    results = await asyncio.gather(*[check(a) for a in apps])
+
+    statuses: dict[str, str] = {}
+    for app_id, status in results:
+        statuses[app_id] = status
+        db_app = db.get(CatalogApp, app_id)
+        if db_app:
+            db_app.status = status
+    db.commit()
+
+    return {"statuses": statuses}
+
+
 @router.get("/check")
 async def check_app(
     url: str,

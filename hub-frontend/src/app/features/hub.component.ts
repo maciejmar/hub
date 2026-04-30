@@ -63,7 +63,7 @@ import { HubService } from './hub.service';
 
       <div class="hub__grid" *ngIf="data">
         <article class="hub__card" *ngFor="let app of visibleApps">
-          <span class="hub__status-dot" [class]="'hub__status-dot--' + (app.status || 'active')"></span>
+          <span class="hub__status-dot" [class]="'hub__status-dot--' + (appStatuses[app.id] || app.status || 'active')"></span>
           <h2>{{ app.name }}</h2>
           <p>{{ app.description }}</p>
           <button class="hub__open" type="button" (click)="open(app.name, app.url)">Zacznij pracę z aplikacją</button>
@@ -337,9 +337,10 @@ import { HubService } from './hub.service';
       border-radius: 50%;
       flex-shrink: 0;
     }
-    .hub__status-dot--active { background: #22c55e; box-shadow: 0 0 7px #22c55e; }
-    .hub__status-dot--orange { background: #f97316; box-shadow: 0 0 7px #f97316; }
-    .hub__status-dot--gray   { background: #6b7280; }
+    .hub__status-dot--active   { background: #22c55e; box-shadow: 0 0 7px #22c55e; }
+    .hub__status-dot--orange   { background: #f97316; box-shadow: 0 0 7px #f97316; }
+    .hub__status-dot--gray     { background: #6b7280; }
+    .hub__status-dot--inactive { background: #ef4444; box-shadow: 0 0 7px #ef4444; }
     .hub__card p {
       margin: 0 0 14px;
       color: var(--text-muted);
@@ -524,6 +525,7 @@ export class HubComponent implements OnInit {
   lightTheme = false;
   checking = false;
   unavailableAppName = '';
+  appStatuses: Record<string, string> = {};
 
   constructor(
     private readonly auth: OidcAuthService,
@@ -650,6 +652,10 @@ export class HubComponent implements OnInit {
       next: (data) => {
         this.data = data;
         this.loading = false;
+        this.hubService.refreshStatuses().subscribe({
+          next: ({ statuses }) => { this.appStatuses = statuses; },
+          error: () => {},
+        });
       },
       error: () => {
         this.error = 'Nie udalo sie pobrac listy aplikacji.';

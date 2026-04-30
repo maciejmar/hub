@@ -62,4 +62,8 @@ export class HubService {
   checkApp(url: string): Observable<{ available: boolean }> {
     return this.http.get<{ available: boolean }>(`${environment.apiBaseUrl}/hub/check`, { params: { url } });
   }
+
+  refreshStatuses(): Observable<{ statuses: Record<string, string> }> {
+    return this.http.get<{ statuses: Record<string, string> }>(`${environment.apiBaseUrl}/hub/refresh-statuses`);
+  }
 }
