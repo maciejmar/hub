@@ -3,6 +3,7 @@ services:
     # image: postgres:16  # Docker Hub — niedostępne w sieci BGK
     image: repo.bank.com.pl/zrai-docker-remote-dev/postgres:16
     container_name: hub-postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -64,6 +65,7 @@ services:
       secrets:
         - pip_conf
     container_name: hub-backend
+    restart: unless-stopped
     depends_on:
       - hub-postgres
     env_file:
