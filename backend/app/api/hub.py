@@ -168,7 +168,7 @@ async def portainer_login_page():
   <p>Logowanie do Portainer...</p>
   <script>
     localStorage.setItem('portainer.JWT', '{jwt}');
-    window.location.replace('/portainer/');
+    window.location.replace('/portainer/?token={jwt}');
   </script>
 </body>
 </html>"""
